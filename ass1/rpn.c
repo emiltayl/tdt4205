@@ -51,5 +51,10 @@ void performOp(RpnCalc* rpnCalc, char op){
 }
 
 double peek(RpnCalc* rpnCalc){
-    // TODO return top element of stack
+    /* We should return 0 if the stack is empty */
+    if (rpnCalc->top == -1) {
+        return 0;
+    } else {
+        return rpnCalc->stack[rpnCalc->top];
+    }
 }
