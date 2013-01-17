@@ -1,7 +1,21 @@
+#include <stdlib.h>
+
 #include "rpn.h"
 
 RpnCalc newRpnCalc(){
-    // TODO initialize new RpnCalc
+    RpnCalc rpnCalc;
+
+    rpnCalc.size = 0;
+    /* -1 as in there is no top-most element */
+    rpnCalc.top = -1;
+    /*
+     * Since we can't store anything on a stack with a size of 0, it makes
+     * sense to set stack to a NULL-pointer. If we realloc a NULL-pointer,
+     * it will be just like a normal malloc.
+     */
+    rpnCalc.stack = NULL;
+
+    return rpnCalc;
 }
 
 void push(RpnCalc* rpnCalc, double n){
