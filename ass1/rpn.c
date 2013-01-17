@@ -47,7 +47,36 @@ void push(RpnCalc* rpnCalc, double n){
 }
 
 void performOp(RpnCalc* rpnCalc, char op){
-    // TODO perform operation
+    /*
+     * Decrease rpnCalc-top and return the old top as we fetch the two top-most
+     * numbers. Should segfault if we try this with only one item in the stack,
+     * by design.
+     */
+
+    double S = rpnCalc->stack[(rpnCalc->top)--],
+           T = rpnCalc->stack[rpnCalc->top],
+           result;
+
+    switch (op) {
+        case '+':
+            result = T + S;
+            break;
+        case '-':
+            result = T - S;
+            break;
+        case '*':
+            result = T * S;
+            break;
+        case '/':
+            result = T / S;
+            break;
+        default:
+            /* Unknown operator, abort */
+            fprintf(stderr, "Unknown operator: %c\n", op);
+            abort();
+    }
+
+    rpnCalc->stack[rpnCalc->top] = result;
 }
 
 double peek(RpnCalc* rpnCalc){
