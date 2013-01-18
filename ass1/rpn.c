@@ -51,7 +51,15 @@ void performOp(RpnCalc* rpnCalc, char op){
      * Decrease rpnCalc-top and return the old top as we fetch the two top-most
      * numbers. Should segfault if we try this with only one item in the stack,
      * by design.
+     *
+     * First we have to check that there are two or more elements in the stack
+     * in order to avoid unspecified behaviour.
      */
+
+    if (rpnCalc->top < 1) {
+        fputs("Tried to perform operation without enough numbers in the stack.\n", stderr);
+        abort();
+    }
 
     double S = rpnCalc->stack[(rpnCalc->top)--],
            T = rpnCalc->stack[rpnCalc->top],
@@ -72,7 +80,7 @@ void performOp(RpnCalc* rpnCalc, char op){
             break;
         default:
             /* Unknown operator, abort */
-            fprintf(stderr, "Unknown operator: %c\n", op);
+            fprintf(stderr, "Unknown operator: \"%c\".\n", op);
             abort();
     }
 
