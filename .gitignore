@@ -18,3 +18,5 @@
 
 # vim swap-files
 *.swp
+*.pdf
+*~
