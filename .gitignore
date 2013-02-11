@@ -21,3 +21,5 @@
 *.pdf
 *~
 *.tar.gz
+
+.DS_Store
