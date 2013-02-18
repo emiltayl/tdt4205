@@ -32,6 +32,10 @@ node_print ( FILE *output, node_t *root, uint32_t nesting )
 node_t * node_init ( node_t *nd, nodetype_t type, void *data, uint32_t n_children, ... ) {
     va_list children;
 
+    /* Initialise the struct. As I don't know much about entry other than the
+     * fact that it is a pointer, I initialise it to NULL in order to avoid
+     * side-effects du to junk data.
+     */
     nd->type = type;
     nd->data = data;
     nd->entry = NULL;
@@ -51,6 +55,7 @@ node_t * node_init ( node_t *nd, nodetype_t type, void *data, uint32_t n_childre
 
 
 void node_finalize ( node_t *discard ) {
+    /* Not much to see here, just some free-ing */
     if (discard != NULL) {
         free(discard->children);
         free(discard->data);
@@ -60,11 +65,15 @@ void node_finalize ( node_t *discard ) {
 
 
 void destroy_subtree ( node_t *discard ){
-    for (int i = 0; i < discard->n_children; i++) {
-        destroy_subtree(discard->children[i]);
-    }
+    /* Not much to see here either, recursively call destroy_subtree on all
+     * children, then free all the memory used by the node. */
+    if (discard != NULL) {
+        for (int i = 0; i < discard->n_children; i++) {
+            destroy_subtree(discard->children[i]);
+        }
 
-    node_finalize(discard);
+        node_finalize(discard);
+    }
 }
 
 
