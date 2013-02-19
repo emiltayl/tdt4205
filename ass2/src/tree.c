@@ -65,14 +65,22 @@ void node_finalize ( node_t *discard ) {
 
 
 void destroy_subtree ( node_t *discard ){
-    /* Not much to see here either, recursively call destroy_subtree on all
-     * children, then free all the memory used by the node. */
     if (discard != NULL) {
         for (int i = 0; i < discard->n_children; i++) {
             destroy_subtree(discard->children[i]);
+            node_finalize(discard->children[i]);
         }
-
-        node_finalize(discard);
+        /* The assignment specifies that destory_subtree should finalize all the
+         * children of *discard, but not discard itself, which is what this
+         * code does. Valgrind (called like this: valgrind -v --tool=memcheck\
+         *  --leak-check=full --show-reachable=yes\
+         *  bin/vslc < vsl_programs/all_lexical.vsl) does report that there is
+         * some memory that is not beeing freed, which could be fixed by calling
+         * node_finalize on discard after destroy_subtree has been called on all
+         * of *discard's children. However, the memory is still reachable, and I
+         * feel that this codes best represents the textual description in the
+         * assignment, so I have left if this way.
+         */
     }
 }
 
