@@ -96,7 +96,7 @@ int *number_var = NULL;
  */
 
 %%
-program : function_list { root = node_init ( malloc(sizeof(node_t)), program_n, NULL, 1, $1);}
+program : function_list { root = node_init ( malloc(sizeof(*root)), program_n, NULL, 1, $1);}
         ;
 
 function_list : function               { $$ = CN1N(function_list_n, $1); }
