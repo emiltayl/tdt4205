@@ -196,8 +196,7 @@ declaration : VAR variable_list { $$ = CN1N(declaration_n, $2); }
 variable : IDENTIFIER { $$ = CN0D(variable_n, STRDUP(yytext)); }
          ;
 
-integer : NUMBER
-        {
+integer : NUMBER {
             number_var = malloc(sizeof(*number_var));
             *number_var = atoi(yytext);
             $$ = CN0D(integer_n, number_var);

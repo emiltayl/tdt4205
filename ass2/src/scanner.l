@@ -39,5 +39,5 @@ VAR                     { RETURN(VAR); }
 [0-9]+                  { RETURN(NUMBER); }
 \"(\\\"|[^"\n])*\"      { RETURN(STRING); }
 [_a-zA-Z][_a-zA-Z0-9]*  { RETURN(IDENTIFIER); }
-.                       { RETURN( yytext[0] ); }
+.                       { RETURN( yytext[0] ); } /* left as it was as it catches +, -, * and / */
 %%
