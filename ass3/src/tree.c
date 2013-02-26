@@ -100,7 +100,7 @@ node_t* simplify_tree ( node_t* node ){
                      * Afterwards we can shrink the children array by one.
                      */
                     node->n_children--;
-                    memmove(node->children, &(node->children[1]), sizeof(*node->children) * node->n_children);
+                    memmove(node->children, &node->children[1], sizeof(*node->children) * node->n_children);
 
                     node->children = realloc(node->children, sizeof(*node->children) * node->n_children);
 
