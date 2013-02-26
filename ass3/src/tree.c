@@ -94,11 +94,14 @@ node_t* simplify_tree ( node_t* node ){
             // different, so they need their own case
             case DECLARATION_LIST:
                 if (node->children[0] == NULL) {
-                    for (int i = 1; i < node->n_children; i++) {
-                        node->children[i - 1] = node->children[i];
-                    }
-
+                    /*
+                     * node's left-most child is NULL, so we must shift all the
+                     * elements in the array one position to the left.
+                     * Afterwards we can shrink the children array by one.
+                     */
                     node->n_children--;
+                    memmove(node->children, &(node->children[1]), sizeof(*node->children) * node->n_children);
+
                     node->children = realloc(node->children, sizeof(*node->children) * node->n_children);
 
                     if (node->children == NULL) {
