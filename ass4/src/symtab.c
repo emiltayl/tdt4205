@@ -19,45 +19,31 @@ static int32_t values_size = 16, values_index = -1;
 static int32_t strings_size = 16, strings_index = -1;
 
 
-void
-symtab_init ( void )
-{
+void symtab_init (void) {
 }
 
 
-void
-symtab_finalize ( void )
-{
+void symtab_finalize (void) {
 }
 
 
-int32_t
-strings_add ( char *str )
-{
+int32_t strings_add (char *str) {
 }
 
 
-void
-strings_output ( FILE *stream )
-{
+void strings_output (FILE *stream) {
 }
 
 
-void
-scope_add ( void )
-{
+void scope_add (void) {
 }
 
 
-void
-scope_remove ( void )
-{
+void scope_remove (void) {
 }
 
 
-void
-symbol_insert ( char *key, symbol_t *value )
-{
+void symbol_insert (char *key, symbol_t *value) {
 
 // Keep this for debugging/testing
 #ifdef DUMP_SYMTAB
