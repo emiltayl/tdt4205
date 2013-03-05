@@ -16,17 +16,17 @@ typedef struct {
 } symbol_t;
 
 
-void symtab_init ( void );
-void symtab_finalize ( void );
+void symtab_init(void);
+void symtab_finalize(void);
 
-int32_t strings_add ( char *str );
-void strings_output ( FILE *stream );
+int32_t strings_add(char *str);
+void strings_output(FILE *stream);
 
-void scope_add ( void );
-void scope_remove ( void );
+void scope_add(void);
+void scope_remove(void);
 
-void symbol_insert ( char *key, symbol_t *value );
-symbol_t *symbol_get ( char *key );
+void symbol_insert(char *key, symbol_t *value);
+symbol_t *symbol_get(char *key);
 
 
 #endif
