@@ -20,6 +20,9 @@ static int32_t strings_size = 16, strings_index = -1;
 
 
 void symtab_init (void) {
+    scopes = malloc(sizeof(*scopes) * scopes_size);
+    values = malloc(sizeof(*values) * values_size);
+    strings = malloc(sizeof(*strings) * strings_size);
 }
 
 
