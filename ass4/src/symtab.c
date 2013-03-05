@@ -32,6 +32,9 @@ int32_t strings_add (char *str) {
 
 
 void strings_output (FILE *stream) {
+    for (int i = 0; i <= strings_index; i++) {
+        fprintf(stream, ".STRING%d: .string \"%s\"\n", i, strings[i]);
+    }
 }
 
 
