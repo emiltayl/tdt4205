@@ -15,7 +15,7 @@ INCLUDEPATH=\
     -Iinclude\
     -I/usr/local/include\
 
-CFLAGS+=  -D_POSIX_C_SOURCE -DDUMP_SYMTAB -std=c99 ${INCLUDEPATH}
+CFLAGS+= -g -D_POSIX_C_SOURCE -DDUMP_SYMTAB -std=c99 ${INCLUDEPATH}
 LDFLAGS+= -L/usr/local/lib -Llib
 LDLIBS+=  -lghthash
 YFLAGS+=  --defines=work/parser.h -o y.tab.c
