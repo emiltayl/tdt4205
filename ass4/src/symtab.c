@@ -32,6 +32,10 @@ void symtab_init(void) {
 
 void symtab_finalize(void) {
     for (int i = 0; i <= scopes_index; i++) {
+        /*
+         * We shouldn't have to remove scopes, but this is here just in case
+         * something wrong happens and we want to clean up.
+         */
         scope_remove();
     }
 
@@ -75,9 +79,11 @@ int32_t strings_add(char *str) {
 
 void strings_output(FILE *stream) {
     fprintf(stream, ".data\n.INTEGER: .string \"%%d \"\n");
+
     for (int i = 0; i <= strings_index; i++) {
         fprintf(stream, ".STRING%d: .string %s\n", i, strings[i]);
     }
+
     fprintf(stream, ".globl main\n");
 }
 
@@ -86,7 +92,7 @@ void scope_add(void) {
     scopes_index++;
 
     if (scopes_index == scopes_size) {
-        /* See strings_add */
+        /* See comment in strings_add */
         scopes_size = scopes_size << 1;
         scopes = realloc(scopes, sizeof(*scopes) * scopes_size);
 
@@ -109,7 +115,7 @@ void symbol_insert(char *key, symbol_t *value) {
     values_index++;
 
     if (values_index == values_size) {
-        /* See strings_add */
+        /* See comment in strings_add */
         values_size = values_size << 1;
         values = realloc(values, sizeof(*values) * values_size);
 
@@ -119,6 +125,7 @@ void symbol_insert(char *key, symbol_t *value) {
     }
 
     values[values_index] = value;
+    /* Set this entries' depth. */
     value->depth = scopes_index;
     ght_insert(scopes[scopes_index], value, strlen(key), key);
 
@@ -133,6 +140,10 @@ symbol_t * symbol_get(char *key) {
     int32_t search_index = scopes_index;
     symbol_t* result = NULL;
 
+    /*
+     * Iterate until we find the symbol or we have reached the bottom of the
+     * stack.
+     */
     while (result == NULL && search_index >= 0) {
         result = ght_get(scopes[search_index], strlen(key), key);
         search_index--;
