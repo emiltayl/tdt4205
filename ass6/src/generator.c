@@ -526,14 +526,17 @@ void generate ( FILE *stream, node_t *root )
             break;
 
         case WHILE_STATEMENT:
+            /* Start-label for the while statement. */
             current_label_index = label_index++;
             string_buffer = malloc(sizeof(*string_buffer) * 17);
             sprintf(string_buffer, "WHILE%d:", current_label_index);
 
             instruction_add(STRING, string_buffer, NULL, 0, 0);
 
+            /* Evaulate the expression and compare it to 0. */
             generate(stream, root->children[0]);
 
+            /* Jump out of the loop if the expression evaluated to 0. */
             instruction_add(POP, eax, NULL, 0, 0);
             instruction_add(CMPZERO, eax, NULL, 0, 0);
 
@@ -542,13 +545,16 @@ void generate ( FILE *stream, node_t *root )
 
             instruction_add(JUMPZERO, string_buffer, NULL, 0, 0);
 
+            /* Execute the loop body. */
             generate(stream, root->children[1]);
 
+            /* Jump to the start of the loop. */
             string_buffer = malloc(sizeof(*string_buffer) * 16);
             sprintf(string_buffer, "WHILE%d", current_label_index);
 
             instruction_add(JUMP, string_buffer, NULL, 0, 0);
 
+            /* Label for loop end. */
             string_buffer = malloc(sizeof(*string_buffer) * 20);
             sprintf(string_buffer, "WHLIEEND%d:", current_label_index);
 
@@ -557,9 +563,10 @@ void generate ( FILE *stream, node_t *root )
 
         case FOR_STATEMENT:
             current_label_index = label_index++;
-            /* Initialise the variable. */
+            /* Initialise the loop variable. */
             generate(stream, root->children[0]);
 
+            /* Start-label for the for-loop. */
             string_buffer = malloc(sizeof(*string_buffer) * 20);
             sprintf(string_buffer, "FORSTART%d:", current_label_index);
 
@@ -576,10 +583,12 @@ void generate ( FILE *stream, node_t *root )
             instruction_add(POP, ebx, NULL, 0, 0);
             instruction_add(CMP, eax, ebx, 0, 0);
 
+            /* Exit the loop if both are equal. */
             string_buffer = malloc(sizeof(*string_buffer) * 17);
             sprintf(string_buffer, "FOREND%d", current_label_index);
             instruction_add(JUMPEQ, string_buffer, NULL, 0, 0);
 
+            /* Execute loop body. */
             generate(stream, root->children[2]);
 
             /*
@@ -602,11 +611,13 @@ void generate ( FILE *stream, node_t *root )
              * End of copied section.
              */
 
+            /* Jump to the start of the loop. */
             string_buffer = malloc(sizeof(*string_buffer) * 19);
             sprintf(string_buffer, "FORSTART%d", current_label_index);
 
             instruction_add(JUMP, string_buffer, NULL, 0, 0);
 
+            /* Loop end label. */
             string_buffer = malloc(sizeof(*string_buffer) * 18);
             sprintf(string_buffer, "FOREND%d:", current_label_index);
 
@@ -617,24 +628,33 @@ void generate ( FILE *stream, node_t *root )
         case IF_STATEMENT:
             current_label_index = label_index++;
 
+            /* Evaluate the if-expression, and compare it to 0. */
             generate(stream, root->children[0]);
 
             instruction_add(POP, eax, NULL, 0, 0);
             instruction_add(CMPZERO, eax, NULL, 0, 0);
 
+            /*
+             * Jump to the end of the if-block if the expression evaluated to
+             * 0.
+             */
             string_buffer = malloc(sizeof(*string_buffer) * 16);
             sprintf(string_buffer, "IFEND%d", current_label_index);
 
             instruction_add(JUMPZERO, string_buffer, NULL, 0, 0);
 
+            /* The if body. */
             generate(stream, root->children[1]);
 
+            /* IF-THEN-ELSE */
             if (root->n_children == 3) {
+                /* Add a jump to after the else body. */
                 string_buffer = malloc(sizeof(*string_buffer) * 18);
                 sprintf(string_buffer, "ELSEEND%d", current_label_index);
 
                 instruction_add(JUMP, string_buffer, NULL, 0, 0);
 
+                /* The else body. */
                 string_buffer = malloc(sizeof(*string_buffer) * 17);
                 sprintf(string_buffer, "IFEND%d:", current_label_index);
 
@@ -646,7 +666,9 @@ void generate ( FILE *stream, node_t *root )
                 sprintf(string_buffer, "ELSEEND%d:", current_label_index);
 
                 instruction_add(STRING, string_buffer, NULL, 0, 0);
+            /* IF-THEN */
             } else {
+                /* Just print out the IFEND label. */
                 string_buffer = malloc(sizeof(*string_buffer) * 17);
                 sprintf(string_buffer, "IFEND%d:", current_label_index);
 
