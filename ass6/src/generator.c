@@ -218,7 +218,7 @@ void generate ( FILE *stream, node_t *root )
                 int32_t t = *((int32_t*)root->children[0]->data);
                 char int_part[3]; //can have more than 999 strings...
                 sprintf(int_part, "%d", t);
-                char str_part[9] = "$.STRING";
+                char str_part[10] = "$.STRING";
                 strcat(str_part, int_part);
 
                 //Generating the instructions, pushing the argument of printf
